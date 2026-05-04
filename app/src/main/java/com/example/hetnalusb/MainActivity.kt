@@ -42,25 +42,21 @@ class MainActivity : AppCompatActivity() {
         sb.append("Znaleziono urządzeń: ${deviceList.size}\n\n")
 
         for (device in deviceList.values) {
-            val vid = String.format("%04X", device.vendorId)
-            val pid = String.format("%04X", device.productId)
+            val vid = String.format("%04x", device.vendorId)
+            val pid = String.format("%04x", device.productId)
 
-            // Get max power from the first configuration (if available)
             val maxPowerW = if (device.configurationCount > 0) {
                 val config = device.getConfiguration(0)
-                // maxPower is in 2mA units. Power (W) = (maxPower * 2mA / 1000) * 5V = maxPower * 0.01
                 config.maxPower * 0.01
             } else {
                 null
             }
             
-            sb.append("Urządzenie: ${device.deviceName}\n")
-            sb.append("  VID: 0x$vid\n")
-            sb.append("  PID: 0x$pid\n")
-            sb.append("  Max Power: ${if (maxPowerW != null) String.format("%.2f W", maxPowerW) else "N/A"}\n")
-            sb.append("  Manufacturer: ${device.manufacturerName ?: "N/A"}\n")
-            sb.append("  Product: ${device.productName ?: "N/A"}\n")
-            sb.append("----------------------------\n")
+            val manufacturer = device.manufacturerName ?: ""
+            val product = device.productName ?: ""
+            val powerInfo = if (maxPowerW != null) String.format("(%.2f W)", maxPowerW) else "(N/A)"
+
+            sb.append("$vid:$pid $manufacturer $product $powerInfo\n")
         }
 
         textView.text = sb.toString()
