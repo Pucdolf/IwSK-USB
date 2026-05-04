@@ -47,7 +47,8 @@ class MainActivity : AppCompatActivity() {
 
             val maxPowerW = if (device.configurationCount > 0) {
                 val config = device.getConfiguration(0)
-                config.maxPower * 0.01
+                // getMaxPower() returns mA. Power (W) = (mA / 1000) * 5V = mA * 0.005
+                config.maxPower * 0.005
             } else {
                 null
             }
