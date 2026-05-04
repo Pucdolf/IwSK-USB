@@ -57,22 +57,18 @@ class MainActivity : AppCompatActivity() {
             val product = device.productName ?: ""
             val powerInfo = if (maxPowerW != null) String.format("(%.2f W)", maxPowerW) else "(N/A)"
 
-            // Collect max packet sizes from all endpoints
-            val endpointSizes = mutableListOf<Int>()
-            for (i in 0 until device.interfaceCount) {
+            // Get max packet size from the first available endpoint
+            var firstEpSize: Int? = null
+            loop@ for (i in 0 until device.interfaceCount) {
                 val usbInterface = device.getInterface(i)
-                for (j in 0 until usbInterface.endpointCount) {
-                    val endpoint = usbInterface.getEndpoint(j)
-                    endpointSizes.add(endpoint.maxPacketSize)
+                if (usbInterface.endpointCount > 0) {
+                    firstEpSize = usbInterface.getEndpoint(0).maxPacketSize
+                    break@loop
                 }
             }
-            val endpointsStr = if (endpointSizes.isNotEmpty()) {
-                " [EP sizes: ${endpointSizes.joinToString(", ")} B]"
-            } else {
-                ""
-            }
+            val epInfo = if (firstEpSize != null) " [$firstEpSize B]" else ""
 
-            sb.append("$vid:$pid $manufacturer $product $powerInfo$endpointsStr\n")
+            sb.append("$vid:$pid $manufacturer $product $powerInfo$epInfo\n")
         }
 
         textView.text = sb.toString()
