@@ -11,7 +11,7 @@ A standard Android application project built with Kotlin and Gradle.
 - **Target SDK:** 36
 - **Architecture:** Standard Android Application structure with a single `app` module.
 - **Features:**
-  - USB Device Listing: Lists all connected USB devices with their Vendor ID (VID) and Product ID (PID) in hexadecimal format.
+  - USB Device Listing: Lists all connected USB devices with their Vendor ID (VID), Product ID (PID) in hexadecimal format, and Maximum Power Consumption in Watts (W).
 
 ## Building and Running
 
